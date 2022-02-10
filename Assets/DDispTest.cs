@@ -6,6 +6,7 @@ public class DDispTest : MonoBehaviour
 {
     const string GROUP_PLAYER = "Player";
     const string GROUP_ENEMY  = "Enemy";
+
     void Start()
     {
         Debug.Log("[Console]Debug.Log");

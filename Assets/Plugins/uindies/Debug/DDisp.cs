@@ -1,3 +1,5 @@
+#define PADD_ENABLE
+
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -128,6 +130,7 @@ public partial class DDisp : MonoBehaviour, IPointerClickHandler
     {
         if (CanvasGroup.blocksRaycasts == true)
         {
+#if PADD_ENABLE
             if (Padd.GetKeyDelay(ePad.UpArrow) == true)
             {
                 this.addCursorLine(-1);
@@ -137,6 +140,7 @@ public partial class DDisp : MonoBehaviour, IPointerClickHandler
             {
                 this.addCursorLine(1);
             }
+#endif
         }
 
         if (currentGroup != GROUP_CONSOLE)
@@ -168,7 +172,11 @@ public partial class DDisp : MonoBehaviour, IPointerClickHandler
     /// </summary>
     public void OnPointerClick(PointerEventData e)
     {
+#if PADD_ENABLE
         var padvec = Padd.GetMouse().Position;
+#else
+        var padvec = Input.mousePosition;
+#endif
         var pos    = new Vector3(padvec.x, padvec.y, 0);
         var index  = TMP_TextUtilities.FindIntersectingLink(Text, pos, targetCamera);
 
@@ -325,7 +333,7 @@ public partial class DDisp : MonoBehaviour, IPointerClickHandler
         }
         else
         {
-            message = $"{message}";
+            message = $" {message}";
         }
 
         logsb.Append($"<link=\"{addLine}:{tag}\">");
