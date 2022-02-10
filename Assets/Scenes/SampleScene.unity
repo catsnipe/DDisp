@@ -424,6 +424,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 768968191182850035, guid: 4b67e3915c07d9c408105a04fb17f41f, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 768968191182850035, guid: 4b67e3915c07d9c408105a04fb17f41f, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 768968191182850035, guid: 4b67e3915c07d9c408105a04fb17f41f, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4267880535525101219, guid: 4b67e3915c07d9c408105a04fb17f41f, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 1968
@@ -434,6 +446,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4865295036093286236, guid: 4b67e3915c07d9c408105a04fb17f41f, type: 3}
       propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4865295036093286236, guid: 4b67e3915c07d9c408105a04fb17f41f, type: 3}
+      propertyPath: m_AnchorMin.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7277787851175682709, guid: 4b67e3915c07d9c408105a04fb17f41f, type: 3}
@@ -524,5 +540,13 @@ PrefabInstance:
       propertyPath: m_Name
       value: DDisp
       objectReference: {fileID: 0}
+    - target: {fileID: 7277787851939950067, guid: 4b67e3915c07d9c408105a04fb17f41f, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: ec355a3c8563e8641be09e9ac8704725, type: 2}
+    - target: {fileID: 7277787851939950067, guid: 4b67e3915c07d9c408105a04fb17f41f, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: -4334190266444321282, guid: ec355a3c8563e8641be09e9ac8704725, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4b67e3915c07d9c408105a04fb17f41f, type: 3}

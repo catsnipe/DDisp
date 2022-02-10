@@ -20,14 +20,18 @@ public class DDispTest : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        DDisp.Log($"display {cnt++}");
+        DDisp.Log($"count: {cnt++}");
 
-        DDisp.Log($"player Hp: 100", GROUP_PLAYER);
+        DDisp.Log($"　　Ｈｐ: 100", GROUP_PLAYER);
+        DDisp.Log($"　攻撃力:  80", GROUP_PLAYER);
+        DDisp.Log($"　防御力:  90", GROUP_PLAYER);
+        DDisp.Log($"　　速度: 120", GROUP_PLAYER);
+        DDisp.Log($"カウント: {cnt}", GROUP_PLAYER);
 
         DDisp.DisplayGroup(GROUP_ENEMY);
         for (int i = 0; i < 100; i++)
         {
-            DDisp.Log($"Enemy{i+1} Hp: {100 * i}");
+            DDisp.Log($"Enemy{i+1, 3} Hp: {100 * i, 5}");
         }
         DDisp.ResetDisplayGroup();
     }
