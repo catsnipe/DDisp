@@ -424,34 +424,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1693561924, guid: 4b67e3915c07d9c408105a04fb17f41f, type: 3}
-      propertyPath: m_BlocksRaycasts
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 768968191182850035, guid: 4b67e3915c07d9c408105a04fb17f41f, type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 768968191182850035, guid: 4b67e3915c07d9c408105a04fb17f41f, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 768968191182850035, guid: 4b67e3915c07d9c408105a04fb17f41f, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1397638999928899696, guid: 4b67e3915c07d9c408105a04fb17f41f, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 176.79999
-      objectReference: {fileID: 0}
-    - target: {fileID: 1572154083898869836, guid: 4b67e3915c07d9c408105a04fb17f41f, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4267880535525101219, guid: 4b67e3915c07d9c408105a04fb17f41f, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 2328
-      objectReference: {fileID: 0}
     - target: {fileID: 4865295036093286236, guid: 4b67e3915c07d9c408105a04fb17f41f, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -460,18 +432,14 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7277787851175682706, guid: 4b67e3915c07d9c408105a04fb17f41f, type: 3}
-      propertyPath: Locked
-      value: 1
+    - target: {fileID: 4865295036093286236, guid: 4b67e3915c07d9c408105a04fb17f41f, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7277787851175682708, guid: 4b67e3915c07d9c408105a04fb17f41f, type: 3}
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 963194227}
-    - target: {fileID: 7277787851175682708, guid: 4b67e3915c07d9c408105a04fb17f41f, type: 3}
-      propertyPath: m_RenderMode
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 7277787851175682709, guid: 4b67e3915c07d9c408105a04fb17f41f, type: 3}
       propertyPath: m_Pivot.x
       value: 0

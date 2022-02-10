@@ -501,6 +501,10 @@ public partial class DDisp : MonoBehaviour, IPointerClickHandler
             }
         }
 
+        var grouprect = Group.GetComponent<RectTransform>();
+        var x = 0.0f;
+        var y = 0.0f;
+
         buttons = new List<Button>();
         for (int i = 0; i < groups.Count; i++)
         {
@@ -510,9 +514,17 @@ public partial class DDisp : MonoBehaviour, IPointerClickHandler
             var     rect   = button.GetComponent<RectTransform>();
             var     text   = button.GetComponentInChildren<TextMeshProUGUI>();
 
-            Vector3 trans  = button.gameObject.transform.localPosition;
-            trans.x = Group.gameObject.transform.localPosition.x - (rect.sizeDelta.x * 1.1f) * i;
-            button.gameObject.transform.localPosition = trans;
+            Vector3 trans  = rect.localPosition;
+            trans.x = grouprect.localPosition.x - x;
+            trans.y = grouprect.localPosition.y - y;
+            rect.localPosition = trans;
+
+            x += (rect.sizeDelta.x * 1.1f);
+            if (x > Screen.width * 0.7f)
+            {
+                x = 0;
+                y -= (rect.sizeDelta.y * 1.1f);
+            }
 
             button.name = group;
             text.SetText(group);
