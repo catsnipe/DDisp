@@ -1,4 +1,4 @@
-#define PADD_ENABLE
+ï»¿#define PADD_ENABLE
 
 using System.Collections.Generic;
 using System.Text;
@@ -79,9 +79,17 @@ public partial class DDisp : MonoBehaviour, IPointerClickHandler
         targetCamera    = Text.canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : Text.canvas.worldCamera;
         logsb           = new StringBuilder();
         consoles        = new List<ConsoleLog>();
-        currentGroup    = GROUP_OFF;
 
         refreshGroupButton();
+
+        if (currentGroup != null)
+        {
+            _ChangeCurrentGroup(currentGroup);
+        }
+        else
+        {
+            currentGroup = GROUP_OFF;
+        }
 
         var rect = GetComponent<RectTransform>();
         
@@ -115,7 +123,7 @@ public partial class DDisp : MonoBehaviour, IPointerClickHandler
     }
 
     /// <summary>
-    /// ƒOƒ‹[ƒv•ÏX
+    /// ã‚°ãƒ«ãƒ¼ãƒ—å¤‰æ›´
     /// </summary>
     /// <param name="_group"></param>
     void onClick(string _group)
@@ -155,7 +163,7 @@ public partial class DDisp : MonoBehaviour, IPointerClickHandler
 #if UNITY_EDITOR
     void OnValidate()
     {
-        // Warning ‰ñ”ğ
+        // Warning å›é¿
         UnityEditor.EditorApplication.delayCall += _OnValidate;
     }
  
@@ -168,7 +176,7 @@ public partial class DDisp : MonoBehaviour, IPointerClickHandler
 #endif
     
     /// <summary>
-    /// ƒNƒŠƒbƒN‚Åƒ|ƒWƒVƒ‡ƒ“‘I‘ğ
+    /// ã‚¯ãƒªãƒƒã‚¯ã§ãƒã‚¸ã‚·ãƒ§ãƒ³é¸æŠ
     /// </summary>
     public void OnPointerClick(PointerEventData e)
     {
@@ -197,7 +205,7 @@ public partial class DDisp : MonoBehaviour, IPointerClickHandler
     }
 
     /// <summary>
-    /// w’è‚µ‚½ƒOƒ‹[ƒv‚ğw¦‚³‚¹‚é
+    /// æŒ‡å®šã—ãŸã‚°ãƒ«ãƒ¼ãƒ—ã‚’æŒ‡ç¤ºã•ã›ã‚‹
     /// </summary>
     public void _ChangeCurrentGroup(string _group)
     {
@@ -207,11 +215,11 @@ public partial class DDisp : MonoBehaviour, IPointerClickHandler
             var text  = button.GetComponentInChildren<TextMeshProUGUI>();
             if (text.text == _group)
             {
-                image.SetColor(1.0f,1.0f,0.0f);
+                image.SetRGB(1.0f,1.0f,0.0f);
             }
             else
             {
-                image.SetColor(1.0f,1.0f,1.0f);
+                image.SetRGB(1.0f,1.0f,1.0f);
             }
         }
 
@@ -224,7 +232,7 @@ public partial class DDisp : MonoBehaviour, IPointerClickHandler
     }
 
     /// <summary>
-    /// Œ»İ“o˜^’†‚ÌƒfƒBƒXƒvƒŒƒCƒOƒ‹[ƒv‚ğæ“¾
+    /// ç¾åœ¨ç™»éŒ²ä¸­ã®ãƒ‡ã‚£ã‚¹ãƒ—ãƒ¬ã‚¤ã‚°ãƒ«ãƒ¼ãƒ—ã‚’å–å¾—
     /// </summary>
     public string _GetCurrentGroup()
     {
@@ -232,7 +240,7 @@ public partial class DDisp : MonoBehaviour, IPointerClickHandler
     }
 
     /// <summary>
-    /// ƒOƒ‹[ƒv’Ç‰Á
+    /// ã‚°ãƒ«ãƒ¼ãƒ—è¿½åŠ 
     /// </summary>
     public void _AddGroup(string group)
     {
@@ -253,9 +261,9 @@ public partial class DDisp : MonoBehaviour, IPointerClickHandler
     }
 
     /// <summary>
-    /// •\¦‚·‚éƒƒOƒOƒ‹[ƒv•ÏX
+    /// è¡¨ç¤ºã™ã‚‹ãƒ­ã‚°ã‚°ãƒ«ãƒ¼ãƒ—å¤‰æ›´
     /// </summary>
-    /// <returns>Œ»İ•\¦’†‚ÌƒOƒ‹[ƒv‚È‚çtrueA‚»‚êˆÈŠO‚È‚çfalse</returns>
+    /// <returns>ç¾åœ¨è¡¨ç¤ºä¸­ã®ã‚°ãƒ«ãƒ¼ãƒ—ãªã‚‰trueã€ãã‚Œä»¥å¤–ãªã‚‰false</returns>
     public bool _DisplayGroup(string _group)
     {
         if (groups.Contains(_group) == false)
@@ -274,7 +282,7 @@ public partial class DDisp : MonoBehaviour, IPointerClickHandler
     }
 
     /// <summary>
-    /// •\¦‚·‚éƒƒOƒOƒ‹[ƒv‚ÌƒŠƒZƒbƒg
+    /// è¡¨ç¤ºã™ã‚‹ãƒ­ã‚°ã‚°ãƒ«ãƒ¼ãƒ—ã®ãƒªã‚»ãƒƒãƒˆ
     /// </summary>
     public void _ResetDisplayGroup()
     {
@@ -282,11 +290,11 @@ public partial class DDisp : MonoBehaviour, IPointerClickHandler
     }
 
     /// <summary>
-    /// ƒƒO•\¦
+    /// ãƒ­ã‚°è¡¨ç¤º
     /// </summary>
     /// <param name="message"></param>
-    /// <param name="tag">s‘I‘ğ‚Éæ“¾‰Â”\‚Èƒ^ƒOî•ñ</param>
-    /// <param name="group">ƒOƒ‹[ƒv’¼Úw’è. w’è‚µ‚È‚¯‚ê‚Î ChangeLogGroup() ‚É]‚¤</param>
+    /// <param name="tag">è¡Œé¸æŠæ™‚ã«å–å¾—å¯èƒ½ãªã‚¿ã‚°æƒ…å ±</param>
+    /// <param name="group">ã‚°ãƒ«ãƒ¼ãƒ—ç›´æ¥æŒ‡å®š. æŒ‡å®šã—ãªã‘ã‚Œã° ChangeLogGroup() ã«å¾“ã†</param>
     public void _Log(string message, string tag = null, string _group = GROUP_OFF)
     {
         if (currentGroup == GROUP_OFF)
@@ -303,13 +311,13 @@ public partial class DDisp : MonoBehaviour, IPointerClickHandler
         }
         if (currentGroup != _group)
         {
-            // •ÊƒOƒ‹[ƒv‚ÌƒƒO‚È‚Ì‚Å“o˜^‚¹‚¸
+            // åˆ¥ã‚°ãƒ«ãƒ¼ãƒ—ã®ãƒ­ã‚°ãªã®ã§ç™»éŒ²ã›ãš
             return;
         }
         
         if (string.IsNullOrEmpty(searchFilter) == false && message.IndexOf(searchFilter) < 0)
         {
-            // ŒŸõƒ[ƒh‘ÎÛŠO
+            // æ¤œç´¢ãƒ¯ãƒ¼ãƒ‰å¯¾è±¡å¤–
             return;
         }
 
@@ -343,7 +351,7 @@ public partial class DDisp : MonoBehaviour, IPointerClickHandler
     }
 
     /// <summary>
-    /// ÅŒã‚É‘I‘ğ‚³‚ê‚½s‚Ìƒ^ƒO‚ğæ“¾
+    /// æœ€å¾Œã«é¸æŠã•ã‚ŒãŸè¡Œã®ã‚¿ã‚°ã‚’å–å¾—
     /// </summary>
     public string _GetLastTag()
     {
@@ -351,9 +359,9 @@ public partial class DDisp : MonoBehaviour, IPointerClickHandler
     }
 
     /// <summary>
-    /// ƒƒOƒrƒ…[‚ÌƒXƒNƒ[ƒ‹ƒƒbƒN ON / OFF
+    /// ãƒ­ã‚°ãƒ“ãƒ¥ãƒ¼ã®ã‚¹ã‚¯ãƒ­ãƒ¼ãƒ«ãƒ­ãƒƒã‚¯ ON / OFF
     /// </summary>
-    /// <param name="locked">true..‘€ì‹Ö~, false..‘€ì‹–‰Â</param>
+    /// <param name="locked">true..æ“ä½œç¦æ­¢, false..æ“ä½œè¨±å¯</param>
     public void _SetLock(bool locked)
     {
         Locked = locked;
@@ -361,7 +369,7 @@ public partial class DDisp : MonoBehaviour, IPointerClickHandler
     }
 
     /// <summary>
-    /// ƒOƒ‹[ƒv‚Ì‰Šú‰»
+    /// ã‚°ãƒ«ãƒ¼ãƒ—ã®åˆæœŸåŒ–
     /// </summary>
     void initializeGroup()
     {
@@ -378,7 +386,7 @@ public partial class DDisp : MonoBehaviour, IPointerClickHandler
     }
 
     /// <summary>
-    /// Debug.Log ‚ÌƒŒƒV[ƒo[
+    /// Debug.Log ã®ãƒ¬ã‚·ãƒ¼ãƒãƒ¼
     /// </summary>
     void logMessageReceived(string condition, string stackTrace, LogType type)
     {
@@ -436,9 +444,9 @@ public partial class DDisp : MonoBehaviour, IPointerClickHandler
     }
 
     /// <summary>
-    /// ‘I‘ğs‚Ìã‰º
+    /// é¸æŠè¡Œã®ä¸Šä¸‹
     /// </summary>
-    /// <param name="amount">•Ï‰»—Ê</param>
+    /// <param name="amount">å¤‰åŒ–é‡</param>
     void addCursorLine(int amount)
     {
         cursorLine += amount;
@@ -446,7 +454,7 @@ public partial class DDisp : MonoBehaviour, IPointerClickHandler
     }
 
     /// <summary>
-    /// ƒƒOƒrƒ…[‚ÌƒXƒNƒ[ƒ‹ƒƒbƒN•Ï‰»
+    /// ãƒ­ã‚°ãƒ“ãƒ¥ãƒ¼ã®ã‚¹ã‚¯ãƒ­ãƒ¼ãƒ«ãƒ­ãƒƒã‚¯å¤‰åŒ–
     /// </summary>
     void toggleLock()
     {
@@ -455,7 +463,7 @@ public partial class DDisp : MonoBehaviour, IPointerClickHandler
     }
 
     /// <summary>
-    /// ƒƒbƒNƒ{ƒ^ƒ“‚ÌXV
+    /// ãƒ­ãƒƒã‚¯ãƒœã‚¿ãƒ³ã®æ›´æ–°
     /// </summary>
     void refreshLock()
     {
@@ -488,7 +496,7 @@ public partial class DDisp : MonoBehaviour, IPointerClickHandler
     }
 
     /// <summary>
-    /// ƒOƒ‹[ƒvƒ{ƒ^ƒ“‚ÌXV
+    /// ã‚°ãƒ«ãƒ¼ãƒ—ãƒœã‚¿ãƒ³ã®æ›´æ–°
     /// </summary>
     void refreshGroupButton()
     {
@@ -536,7 +544,7 @@ public partial class DDisp : MonoBehaviour, IPointerClickHandler
     }
 
     /// <summary>
-    /// ƒeƒLƒXƒg‚ª•ÏX‚³‚ê‚Ä‚¢‚½‚çXV
+    /// ãƒ†ã‚­ã‚¹ãƒˆãŒå¤‰æ›´ã•ã‚Œã¦ã„ãŸã‚‰æ›´æ–°
     /// </summary>
     void refreshText()
     {
@@ -553,7 +561,7 @@ public partial class DDisp : MonoBehaviour, IPointerClickHandler
     }
 
     /// <summary>
-    /// ƒXƒNƒ[ƒ‹ˆÊ’u‚ª‰º‚Ì•û‚Å‚ ‚ê‚Î©“®“I‚ÉÅ‰º’i‚É
+    /// ã‚¹ã‚¯ãƒ­ãƒ¼ãƒ«ä½ç½®ãŒä¸‹ã®æ–¹ã§ã‚ã‚Œã°è‡ªå‹•çš„ã«æœ€ä¸‹æ®µã«
     /// </summary>
     void refreshTextAndScrollBottom()
     {
@@ -566,7 +574,7 @@ public partial class DDisp : MonoBehaviour, IPointerClickHandler
     }
 
     /// <summary>
-    /// ŒŸõƒtƒBƒ‹ƒ^XV
+    /// æ¤œç´¢ãƒ•ã‚£ãƒ«ã‚¿æ›´æ–°
     /// </summary>
     void refreshSearchFilter(string filter)
     {
@@ -575,7 +583,7 @@ public partial class DDisp : MonoBehaviour, IPointerClickHandler
     }
     
     /// <summary>
-    /// ƒRƒ“ƒ\[ƒ‹ƒƒOXV
+    /// ã‚³ãƒ³ã‚½ãƒ¼ãƒ«ãƒ­ã‚°æ›´æ–°
     /// </summary>
     void refreshConsole()
     {
@@ -599,7 +607,7 @@ public partial class DDisp : MonoBehaviour, IPointerClickHandler
     }
 
     /// <summary>
-    /// ƒŠƒ“ƒNƒ^ƒOæ“¾ s”:ƒ^ƒO ‚ğ”z—ñ‚É‚µ‚Ä•Ô‚·
+    /// ãƒªãƒ³ã‚¯ã‚¿ã‚°å–å¾— è¡Œæ•°:ã‚¿ã‚° ã‚’é…åˆ—ã«ã—ã¦è¿”ã™
     /// </summary>
     string[] getLinkTag(string tagstr)
     {

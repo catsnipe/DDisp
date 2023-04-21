@@ -14,6 +14,8 @@ public class DDispTest : MonoBehaviour
         
         DDisp.AddGroup(GROUP_PLAYER);
         DDisp.AddGroup(GROUP_ENEMY);
+
+        DDisp.ChangeCurrentGroup(GROUP_PLAYER);
     }
 
     int cnt = 0;
