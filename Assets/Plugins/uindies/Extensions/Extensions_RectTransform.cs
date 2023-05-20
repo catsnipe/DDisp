@@ -66,7 +66,14 @@ public static class Extensions_RectTransform
     /// </summary>
     public static float GetWidth(this RectTransform self)
     {
-        return self.sizeDelta.x;
+        if (self.sizeDelta.x <= 0)
+        {
+            return self.rect.width;
+        }
+        else
+        {
+            return self.sizeDelta.x;
+        }
     }
     
     /// <summary>
@@ -74,7 +81,14 @@ public static class Extensions_RectTransform
     /// </summary>
     public static float GetHeight(this RectTransform self)
     {
-        return self.sizeDelta.y;
+        if (self.sizeDelta.y <= 0)
+        {
+            return self.rect.height;
+        }
+        else
+        {
+            return self.sizeDelta.y;
+        }
     }
 
     /// <summary>
