@@ -1,4 +1,4 @@
-﻿#define PADD_ENABLE
+﻿//#define PADD_ENABLE
 
 using System.Collections;
 using System.Collections.Generic;
@@ -150,6 +150,16 @@ public partial class DDisp : MonoBehaviour, IPointerClickHandler
             }
             else
             if (Padd.GetKeyDelay(ePad.DownArrow) == true)
+            {
+                this.addCursorLine(1);
+            }
+#else
+            if (Input.GetKey(KeyCode.UpArrow) == true)
+            {
+                this.addCursorLine(-1);
+            }
+            else
+            if (Input.GetKey(KeyCode.DownArrow) == true)
             {
                 this.addCursorLine(1);
             }
