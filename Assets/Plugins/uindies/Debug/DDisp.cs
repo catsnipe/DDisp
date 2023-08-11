@@ -1,5 +1,6 @@
 ﻿#define PADD_ENABLE
 
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -32,6 +33,8 @@ public partial class DDisp : MonoBehaviour, IPointerClickHandler
     Sprite[]             Sprites = null;
     [SerializeField]
     bool                 Locked;
+    [SerializeField]
+    string               FirstGroup;
 
     public const string COLOR_GREEN     = "<color=#00ff00>";
     public const string COLOR_YELLOW    = "<color=#ffff00>";
@@ -82,15 +85,6 @@ public partial class DDisp : MonoBehaviour, IPointerClickHandler
 
         refreshGroupButton();
 
-        if (currentGroup != null)
-        {
-            _ChangeCurrentGroup(currentGroup);
-        }
-        else
-        {
-            currentGroup = GROUP_OFF;
-        }
-
         var rect = GetComponent<RectTransform>();
         
         float fontSize;
@@ -114,12 +108,23 @@ public partial class DDisp : MonoBehaviour, IPointerClickHandler
     /// <summary>
     /// Start
     /// </summary>
-    void Start()
+    IEnumerator Start()
     {
         refreshLock();
 
         Search.onValueChanged.AddListener((s) => refreshSearchFilter(s));
         LockButton.onClick.AddListener(() => toggleLock());
+
+        yield return null;
+
+        if (groups.Contains(FirstGroup) == true)
+        {
+            _ChangeCurrentGroup(FirstGroup);
+        }
+        else
+        {
+            _ChangeCurrentGroup(GROUP_OFF);
+        }
     }
 
     /// <summary>
@@ -209,6 +214,12 @@ public partial class DDisp : MonoBehaviour, IPointerClickHandler
     /// </summary>
     public void _ChangeCurrentGroup(string _group)
     {
+        if (groups.Contains(_group) == false)
+        {
+            Debug.LogError($"undefined group. '{_group}'");
+            _group = GROUP_OFF;
+        }
+
         foreach (var button in buttons)
         {
             var image = button.GetComponentInChildren<Image>();
@@ -229,6 +240,7 @@ public partial class DDisp : MonoBehaviour, IPointerClickHandler
 
         refreshConsole();
         refreshLock();
+
     }
 
     /// <summary>
@@ -246,6 +258,11 @@ public partial class DDisp : MonoBehaviour, IPointerClickHandler
     {
         initializeGroup();
 
+        if (groups.Contains(group) == true)
+        {
+            return;
+        }
+
         groups.Add(group);
         groups.Sort(
             (a,b) =>
@@ -258,6 +275,11 @@ public partial class DDisp : MonoBehaviour, IPointerClickHandler
             }
         );
         refreshGroupButton();
+
+        if (FirstGroup == group)
+        {
+            _ChangeCurrentGroup(FirstGroup);
+        }
     }
 
     /// <summary>
@@ -467,7 +489,7 @@ public partial class DDisp : MonoBehaviour, IPointerClickHandler
     /// </summary>
     void refreshLock()
     {
-        if (currentGroup == GROUP_OFF)
+        if (currentGroup == GROUP_OFF || currentGroup == GROUP_DISPLAY)
         {
             Search.SetActive(false);
             LockImage.enabled = false;

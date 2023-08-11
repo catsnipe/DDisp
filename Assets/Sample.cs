@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DDispTest : MonoBehaviour
+public class Sample : MonoBehaviour
 {
     const string GROUP_PLAYER = "Player";
     const string GROUP_ENEMY  = "Enemy";
@@ -12,10 +12,9 @@ public class DDispTest : MonoBehaviour
         Debug.Log("[Console]Debug.Log");
         Debug.LogWarning("[Console]Debug.LogWarning");
         
+        // add user group
         DDisp.AddGroup(GROUP_PLAYER);
         DDisp.AddGroup(GROUP_ENEMY);
-
-        DDisp.ChangeCurrentGroup(GROUP_PLAYER);
     }
 
     int cnt = 0;
@@ -23,14 +22,17 @@ public class DDispTest : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // Group: Display
         DDisp.Log($"count: {cnt++}");
 
+        // Group: Player
         DDisp.Log($"　　Ｈｐ: 100", GROUP_PLAYER);
         DDisp.Log($"　攻撃力:  80", GROUP_PLAYER);
         DDisp.Log($"　防御力:  90", GROUP_PLAYER);
         DDisp.Log($"　　速度: 120", GROUP_PLAYER);
         DDisp.Log($"カウント: {cnt}", GROUP_PLAYER);
 
+        // Group: Enemy
         DDisp.DisplayGroup(GROUP_ENEMY);
         for (int i = 0; i < 100; i++)
         {
