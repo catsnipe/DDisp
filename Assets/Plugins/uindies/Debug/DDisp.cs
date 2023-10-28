@@ -329,12 +329,23 @@ public partial class DDisp : MonoBehaviour, IPointerClickHandler
     /// <param name="group">グループ直接指定. 指定しなければ ChangeLogGroup() に従う</param>
     public void _Log(string message, string tag = null, string _group = GROUP_OFF)
     {
+        if (groups == null)
+        {
+            return;
+        }
         if (currentGroup == GROUP_OFF)
         {
             return;
         }
         if (_group == GROUP_OFF)
         {
+            // Display は「どんな場合でも表示して欲しい一時的な使用」なので、
+            // DDisp が隠れててもオンにする
+            if (group == GROUP_DISPLAY && this.gameObject.activeSelf == false)
+            {
+                this.SetActive(true);
+            }
+
             _group = group;
             if (_group == GROUP_OFF)
             {
@@ -587,6 +598,7 @@ public partial class DDisp : MonoBehaviour, IPointerClickHandler
             return;
         }
         Text.SetText(text);
+
         Vector2 sizeDelta = ViewContent.sizeDelta;
         sizeDelta.y = Text.preferredHeight;
         ViewContent.sizeDelta = sizeDelta;
