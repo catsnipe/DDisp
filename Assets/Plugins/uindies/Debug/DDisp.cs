@@ -16,6 +16,8 @@ public partial class DDisp : MonoBehaviour, IPointerClickHandler
     [SerializeField]
     RectTransform        ViewContent = null;
     [SerializeField]
+    Canvas               Canvas = null;
+    [SerializeField]
     TextMeshProUGUI      Text = null;
     [SerializeField]
     TMP_InputField       Search = null;
@@ -77,9 +79,41 @@ public partial class DDisp : MonoBehaviour, IPointerClickHandler
     /// </summary>
     void Awake()
     {
-        initializeGroup();
+        initialize();
+    }
 
-        targetCamera    = Text.canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : Text.canvas.worldCamera;
+    /// <summary>
+    /// Start
+    /// </summary>
+    IEnumerator Start()
+    {
+        yield return null;
+
+        if (groups.Contains(FirstGroup) == true)
+        {
+            _ChangeCurrentGroup(FirstGroup);
+        }
+        else
+        {
+            _ChangeCurrentGroup(GROUP_OFF);
+        }
+    }
+
+    void initialize()
+    {
+        if (groups != null)
+        {
+            return;
+        }
+
+        groups = new List<string>();
+        groups.Add(GROUP_OFF);
+        groups.Add(GROUP_DISPLAY);
+        groups.Add(GROUP_CONSOLE);
+
+        group = GROUP_DISPLAY;
+
+        targetCamera    = Canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : Canvas.worldCamera;
         logsb           = new StringBuilder();
         consoles        = new List<ConsoleLog>();
 
@@ -103,28 +137,11 @@ public partial class DDisp : MonoBehaviour, IPointerClickHandler
         }
 
         Application.logMessageReceived += logMessageReceived;
-    }
 
-    /// <summary>
-    /// Start
-    /// </summary>
-    IEnumerator Start()
-    {
         refreshLock();
 
         Search.onValueChanged.AddListener((s) => refreshSearchFilter(s));
         LockButton.onClick.AddListener(() => toggleLock());
-
-        yield return null;
-
-        if (groups.Contains(FirstGroup) == true)
-        {
-            _ChangeCurrentGroup(FirstGroup);
-        }
-        else
-        {
-            _ChangeCurrentGroup(GROUP_OFF);
-        }
     }
 
     /// <summary>
@@ -266,7 +283,7 @@ public partial class DDisp : MonoBehaviour, IPointerClickHandler
     /// </summary>
     public void _AddGroup(string group)
     {
-        initializeGroup();
+        initialize();
 
         if (groups.Contains(group) == true)
         {
@@ -329,10 +346,6 @@ public partial class DDisp : MonoBehaviour, IPointerClickHandler
     /// <param name="group">グループ直接指定. 指定しなければ ChangeLogGroup() に従う</param>
     public void _Log(string message, string tag = null, string _group = GROUP_OFF)
     {
-        if (groups == null)
-        {
-            return;
-        }
         if (currentGroup == GROUP_OFF)
         {
             return;
@@ -341,9 +354,10 @@ public partial class DDisp : MonoBehaviour, IPointerClickHandler
         {
             // Display は「どんな場合でも表示して欲しい一時的な使用」なので、
             // DDisp が隠れててもオンにする
-            if (group == GROUP_DISPLAY && this.gameObject.activeSelf == false)
+            if ((group == null || group == GROUP_DISPLAY) && this.gameObject.activeSelf == false)
             {
                 this.SetActive(true);
+                initialize();
             }
 
             _group = group;
@@ -409,23 +423,6 @@ public partial class DDisp : MonoBehaviour, IPointerClickHandler
     {
         Locked = locked;
         refreshLock();
-    }
-
-    /// <summary>
-    /// グループの初期化
-    /// </summary>
-    void initializeGroup()
-    {
-        if (groups != null)
-        {
-            return;
-        }
-        groups = new List<string>();
-        groups.Add(GROUP_OFF);
-        groups.Add(GROUP_DISPLAY);
-        groups.Add(GROUP_CONSOLE);
-
-        group = GROUP_DISPLAY;
     }
 
     /// <summary>
