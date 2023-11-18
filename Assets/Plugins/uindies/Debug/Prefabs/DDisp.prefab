@@ -800,7 +800,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 4865295036093286236}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.344
+  m_Size: 0.398
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -1361,6 +1361,7 @@ GameObject:
   - component: {fileID: 7277787851175682711}
   - component: {fileID: 7277787851175682710}
   - component: {fileID: 7277787851175682706}
+  - component: {fileID: 613947021157804924}
   m_Layer: 5
   m_Name: DDisp
   m_TagString: Untagged
@@ -1481,6 +1482,18 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 5a19b25bfca8de3499a0f421257f1b03, type: 3}
   Locked: 1
   FirstGroup: Display
+--- !u!114 &613947021157804924
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7277787851175682713}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 571343a1c1a5c124fa537e2ab4c33a51, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7277787851939950069
 GameObject:
   m_ObjectHideFlags: 0
