@@ -11,10 +11,9 @@ public class Sample : MonoBehaviour
     {
         Debug.Log("[Console]Debug.Log");
         Debug.LogWarning("[Console]Debug.LogWarning");
-        
-        // add user group
+
+        // I'll add group first.
         DDisp.AddGroup(GROUP_PLAYER);
-        DDisp.AddGroup(GROUP_ENEMY);
     }
 
     int cnt = 0;
@@ -34,9 +33,11 @@ public class Sample : MonoBehaviour
 
         // Group: Enemy
         DDisp.DisplayGroup(GROUP_ENEMY);
-        for (int i = 0; i < 100; i++)
         {
-            DDisp.Log($"Enemy{i+1, 3} Hp: {100 * i, 5}");
+            for (int i = 0; i < 100; i++)
+            {
+                DDisp.Log($"Enemy{i+1, 3} Hp: {100 * i, 5}");
+            }
         }
         DDisp.ResetDisplayGroup();
     }

@@ -75,7 +75,7 @@ public partial class DDisp : MonoBehaviour
     /// <param name="group">グループ直接指定. 指定しなければ ChangeLogGroup() に従う</param>
     public static void Log(object message)
     {
-        instance?._Log(message.ToString(), null, DebugDisp.GROUP_OFF);
+        Log(message.ToString(), null, DebugDisp.GROUP_OFF);
     }
 
     /// <summary>
@@ -85,7 +85,7 @@ public partial class DDisp : MonoBehaviour
     /// <param name="group">グループ直接指定. 指定しなければ ChangeLogGroup() に従う</param>
     public static void Log(object message, string group = DebugDisp.GROUP_OFF)
     {
-        instance?._Log(message.ToString(), null, group);
+        Log(message.ToString(), null, group);
     }
 
     /// <summary>

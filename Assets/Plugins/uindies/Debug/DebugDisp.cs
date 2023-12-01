@@ -119,23 +119,6 @@ public partial class DebugDisp : MonoBehaviour, IPointerClickHandler
 
         refreshGroupButton();
 
-        var rect = GetComponent<RectTransform>();
-        
-        float fontSize;
-
-        if (Screen.width > Screen.height)
-        {
-            fontSize = rect.GetWidth() / 80;
-        }
-        else
-        {
-            fontSize = rect.GetHeight() / 80;
-        }
-        if (Text.fontSize != fontSize)
-        {
-            Text.fontSize = fontSize;
-        }
-
         Application.logMessageReceived += logMessageReceived;
 
         refreshLock();
@@ -315,14 +298,13 @@ public partial class DebugDisp : MonoBehaviour, IPointerClickHandler
     /// <returns>現在表示中のグループならtrue、それ以外ならfalse</returns>
     public bool _DisplayGroup(string _group)
     {
-        if (groups.Contains(_group) == false)
-        {
-            group = GROUP_OFF;
-            return false;
-        }
         if (currentGroup == GROUP_OFF)
         {
             return false;
+        }
+        if (groups.Contains(_group) == false)
+        {
+            _AddGroup(_group);
         }
 
         group = _group;
