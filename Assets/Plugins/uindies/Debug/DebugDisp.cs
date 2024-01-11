@@ -408,6 +408,14 @@ public partial class DebugDisp : MonoBehaviour, IPointerClickHandler
     }
 
     /// <summary>
+    /// ログのフォントサイズ設定
+    /// </summary>
+    public void _SetFontSize(float size)
+    {
+        Text.fontSize = size;
+    }
+
+    /// <summary>
     /// Debug.Log のレシーバー
     /// </summary>
     void logMessageReceived(string condition, string stackTrace, LogType type)

@@ -108,4 +108,12 @@ public partial class DDisp : MonoBehaviour
         instance?._SetLock(locked);
     }
 
+    /// <summary>
+    /// ログのフォントサイズ設定
+    /// </summary>
+    public static void SetFontSize(float size)
+    {
+        instance?._SetFontSize(size);
+    }
+
 }
