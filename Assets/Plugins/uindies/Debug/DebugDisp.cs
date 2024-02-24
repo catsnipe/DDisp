@@ -1,5 +1,6 @@
 ﻿//#define PADD_ENABLE
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
@@ -298,6 +299,10 @@ public partial class DebugDisp : MonoBehaviour, IPointerClickHandler
     /// <returns>現在表示中のグループならtrue、それ以外ならfalse</returns>
     public bool _DisplayGroup(string _group)
     {
+        if (groups == null)
+        {
+            return false;
+        }
         if (currentGroup == GROUP_OFF)
         {
             return false;
@@ -328,10 +333,19 @@ public partial class DebugDisp : MonoBehaviour, IPointerClickHandler
     /// <param name="_group">グループ直接指定. 指定しなければ ChangeLogGroup() に従う</param>
     public void _Log(string message, string tag = null, string _group = GROUP_OFF)
     {
+        if (logsb == null)
+        {
+            return;
+        }
         if (currentGroup == GROUP_OFF)
         {
             return;
         }
+        if (this.gameObject == null)
+        {
+            return;
+        }
+
         if (_group == GROUP_OFF)
         {
             // Display は「どんな場合でも表示して欲しい一時的な使用」なので、
@@ -354,7 +368,9 @@ public partial class DebugDisp : MonoBehaviour, IPointerClickHandler
             return;
         }
         
-        if (string.IsNullOrEmpty(searchFilter) == false && message.IndexOf(searchFilter) < 0)
+        if (string.IsNullOrEmpty(searchFilter) == false &&
+            string.IsNullOrEmpty(message) == false &&
+            message.IndexOf(searchFilter) < 0)
         {
             // 検索ワード対象外
             return;
