@@ -7,7 +7,14 @@ public partial class DDisp : MonoBehaviour
 
     void Awake()
     {
-        instance = FindObjectOfType<DebugDisp>(true);
+        instance = FindFirstObjectByType<DebugDisp>(FindObjectsInactive.Include);
+#if MASTER_BUILD
+        //if (instance != null)
+        //{
+        //    DestroyImmediate(instance.gameObject);
+        //    instance = null;
+        //}
+#endif
     }
 
     /// <summary>
@@ -15,7 +22,9 @@ public partial class DDisp : MonoBehaviour
     /// </summary>
     public static void ChangeCurrentGroup(string _group)
     {
-        instance?._ChangeCurrentGroup(_group);
+        if (instance == null) return;
+
+        instance._ChangeCurrentGroup(_group);
         if (_group == DebugDisp.GROUP_OFF)
         {
             SetLock(false);
@@ -27,7 +36,8 @@ public partial class DDisp : MonoBehaviour
     /// </summary>
     public static string GetLastTag()
     {
-        return instance?._GetLastTag();
+        if (instance == null) return null;
+        return instance._GetLastTag();
     }
 
     /// <summary>
@@ -36,7 +46,8 @@ public partial class DDisp : MonoBehaviour
     /// <param name="group"></param>
     public static void AddGroup(string group)
     {
-        instance?._AddGroup(group);
+        if (instance == null) return;
+        instance._AddGroup(group);
     }
 
     /// <summary>
@@ -44,7 +55,8 @@ public partial class DDisp : MonoBehaviour
     /// </summary>
     public static string GetDisplayGroup()
     {
-        return instance?._GetCurrentGroup();
+        if (instance == null) return null;
+        return instance._GetCurrentGroup();
     }
 
     /// <summary>
@@ -53,10 +65,7 @@ public partial class DDisp : MonoBehaviour
     /// <returns>現在表示中のグループならtrue、それ以外ならfalse</returns>
     public static bool DisplayGroup(string _group)
     {
-        if (instance == null)
-        {
-            return false;
-        }
+        if (instance == null) return false;
         return instance._DisplayGroup(_group);
     }
 
@@ -65,7 +74,8 @@ public partial class DDisp : MonoBehaviour
     /// </summary>
     public static void ResetDisplayGroup()
     {
-        instance?._ResetDisplayGroup();
+        if (instance == null) return;
+        instance._ResetDisplayGroup();
     }
 
     /// <summary>
@@ -96,7 +106,8 @@ public partial class DDisp : MonoBehaviour
     /// <param name="group">グループ直接指定. 指定しなければ ChangeLogGroup() に従う</param>
     public static void Log(object message, string tag = null, string group = DebugDisp.GROUP_OFF)
     {
-        instance?._Log(message.ToString(), tag, group);
+        if (instance == null) return;
+        instance._Log(message.ToString(), tag, group);
     }
 
     /// <summary>
@@ -105,7 +116,8 @@ public partial class DDisp : MonoBehaviour
     /// <param name="locked">true..操作禁止, false..操作許可</param>
     public static void SetLock(bool locked)
     {
-        instance?._SetLock(locked);
+        if (instance == null) return;
+        instance._SetLock(locked);
     }
 
     /// <summary>
@@ -113,7 +125,25 @@ public partial class DDisp : MonoBehaviour
     /// </summary>
     public static void SetFontSize(float size)
     {
-        instance?._SetFontSize(size);
+        if (instance == null) return;
+        instance._SetFontSize(size);
     }
 
+    /// <summary>
+    /// ログのフォントサイズ取得
+    /// </summary>
+    public static float GetFontSize()
+    {
+        if (instance == null) return 0;
+        return instance._GetFontSize();
+    }
+
+    /// <summary>
+    /// ログのフォントサイズ取得
+    /// </summary>
+    public static string GetSearchText()
+    {
+        if (instance == null) return null;
+        return instance.GetSearchText();
+    }
 }

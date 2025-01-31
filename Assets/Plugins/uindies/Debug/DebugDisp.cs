@@ -90,13 +90,16 @@ public partial class DebugDisp : MonoBehaviour, IPointerClickHandler
     {
         yield return null;
 
-        if (groups.Contains(FirstGroup) == true)
+        if (groups.Count > 0)
         {
-            _ChangeCurrentGroup(FirstGroup);
-        }
-        else
-        {
-            _ChangeCurrentGroup(GROUP_OFF);
+            if (groups.Contains(FirstGroup) == true)
+            {
+                _ChangeCurrentGroup(FirstGroup);
+            }
+            else
+            {
+                _ChangeCurrentGroup(GROUP_OFF);
+            }
         }
     }
 
@@ -108,13 +111,16 @@ public partial class DebugDisp : MonoBehaviour, IPointerClickHandler
         }
 
         groups = new List<string>();
+
+#if !MASTER_BUILD
         groups.Add(GROUP_OFF);
         groups.Add(GROUP_DISPLAY);
         groups.Add(GROUP_CONSOLE);
 
         group = GROUP_DISPLAY;
+#endif
 
-        targetCamera    = Canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : Canvas.worldCamera;
+        targetCamera = Canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : Canvas.worldCamera;
         logsb           = new StringBuilder();
         consoles        = new List<ConsoleLog>();
 
@@ -314,7 +320,7 @@ public partial class DebugDisp : MonoBehaviour, IPointerClickHandler
 
         group = _group;
 
-        return true;
+        return currentGroup == group;
     }
 
     /// <summary>
@@ -432,6 +438,22 @@ public partial class DebugDisp : MonoBehaviour, IPointerClickHandler
     }
 
     /// <summary>
+    /// ログのフォントサイズ取得
+    /// </summary>
+    public float _GetFontSize()
+    {
+        return Text.fontSize;
+    }
+
+    /// <summary>
+    /// サーチテキストを取得
+    /// </summary>
+    public string GetSearchText()
+    {
+        return Search.text;
+    }
+
+    /// <summary>
     /// Debug.Log のレシーバー
     /// </summary>
     void logMessageReceived(string condition, string stackTrace, LogType type)
@@ -513,7 +535,7 @@ public partial class DebugDisp : MonoBehaviour, IPointerClickHandler
     /// </summary>
     void refreshLock()
     {
-        if (currentGroup == GROUP_OFF || currentGroup == GROUP_DISPLAY)
+        if (groups == null || groups.Count == 0)
         {
             Search.SetActive(false);
             LockImage.enabled = false;
@@ -521,23 +543,33 @@ public partial class DebugDisp : MonoBehaviour, IPointerClickHandler
             CanvasGroup.blocksRaycasts = false;
         }
         else
-        if (Locked == true)
         {
-            LockImage.sprite  = Sprites[1];
-            ViewImage.color   = new Color(0, 0, 0, 0.4f);
-            Search.SetActive(false);
-            LockImage.enabled = true;
-            ViewImage.enabled = true;
-            CanvasGroup.blocksRaycasts = false;
-        }
-        else
-        {
-            LockImage.sprite  = Sprites[0];
-            ViewImage.color   = new Color(0, 0, 0.2f, 0.6f);
-            Search.SetActive(true);
-            LockImage.enabled = true;
-            ViewImage.enabled = true;
-            CanvasGroup.blocksRaycasts = true;
+            if (currentGroup == GROUP_OFF || currentGroup == GROUP_DISPLAY)
+            {
+                Search.SetActive(false);
+                LockImage.enabled = false;
+                ViewImage.enabled = false;
+                CanvasGroup.blocksRaycasts = false;
+            }
+            else
+            if (Locked == true)
+            {
+                LockImage.sprite  = Sprites[1];
+                ViewImage.color   = new Color(0, 0, 0, 0.4f);
+                Search.SetActive(false);
+                LockImage.enabled = true;
+                ViewImage.enabled = true;
+                CanvasGroup.blocksRaycasts = false;
+            }
+            else
+            {
+                LockImage.sprite  = Sprites[0];
+                ViewImage.color   = new Color(0, 0, 0.2f, 0.6f);
+                Search.SetActive(true);
+                LockImage.enabled = true;
+                ViewImage.enabled = true;
+                CanvasGroup.blocksRaycasts = true;
+            }
         }
     }
 
@@ -548,7 +580,7 @@ public partial class DebugDisp : MonoBehaviour, IPointerClickHandler
     {
         if (buttons != null)
         {
-            for (int i = 1; i < buttons.Count; i++)
+            for (int i = 0; i < buttons.Count; i++)
             {
                 GameObject.DestroyImmediate(buttons[i].gameObject);
                 buttons[i] = null;
@@ -564,14 +596,15 @@ public partial class DebugDisp : MonoBehaviour, IPointerClickHandler
         {
             string  group  = groups[i];
 
-            var     button = i == 0 ? Group : UnityEngine.Object.Instantiate(Group, this.transform);
+            var     button = UnityEngine.Object.Instantiate(Group, Group.transform.parent);
+            button.SetActive(true);
             var     rect   = button.GetComponent<RectTransform>();
             var     text   = button.GetComponentInChildren<TextMeshProUGUI>();
 
-            Vector3 trans  = rect.localPosition;
-            trans.x = grouprect.localPosition.x - x;
-            trans.y = grouprect.localPosition.y - y;
-            rect.localPosition = trans;
+            Vector3 trans  = rect.anchoredPosition;
+            trans.x = grouprect.anchoredPosition.x - x;
+            trans.y = grouprect.anchoredPosition.y - y;
+            rect.anchoredPosition = trans;
 
             x += (rect.sizeDelta.x * 1.1f);
             if (x > Screen.width * 0.7f)
