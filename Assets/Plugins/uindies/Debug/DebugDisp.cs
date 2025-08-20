@@ -50,14 +50,6 @@ public partial class DebugDisp : MonoBehaviour, IPointerClickHandler
     public const string GROUP_DISPLAY   = "Display";
     public const string GROUP_CONSOLE   = "Console";
 
-    class ConsoleLog
-    {
-        public string Trace;
-        public string Text;
-    }
-
-    const int         CONSOLES_MAX = 100;
-
     List<string>      groups;
 
     string            currentGroup;
@@ -66,7 +58,7 @@ public partial class DebugDisp : MonoBehaviour, IPointerClickHandler
     List<Button>      buttons;
     Camera            targetCamera;
     StringBuilder     logsb;
-    List<ConsoleLog>  consoles;
+    StringBuilder     logconsole;
 
     int               cursorLine;
     int               addLine;
@@ -74,6 +66,8 @@ public partial class DebugDisp : MonoBehaviour, IPointerClickHandler
 
     string            lastTag;
     string            searchFilter;
+
+    bool              isRequiredUpdate;
 
     /// <summary>
     /// Awake
@@ -121,12 +115,13 @@ public partial class DebugDisp : MonoBehaviour, IPointerClickHandler
 #endif
 
         targetCamera = Canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : Canvas.worldCamera;
-        logsb           = new StringBuilder();
-        consoles        = new List<ConsoleLog>();
+        logsb            = new StringBuilder();
+        logconsole       = new StringBuilder();
+        isRequiredUpdate = false;
 
         refreshGroupButton();
 
-        Application.logMessageReceived += logMessageReceived;
+        Application.logMessageReceivedThreaded += logMessageReceived;
 
         refreshLock();
 
@@ -173,12 +168,27 @@ public partial class DebugDisp : MonoBehaviour, IPointerClickHandler
 #endif
         }
 
-        if (currentGroup != GROUP_CONSOLE)
+        if (isRequiredUpdate == true)
         {
+            isRequiredUpdate = false;
+
+            float pos = ViewRect.verticalNormalizedPosition;
+
             refreshText();
-            logsb.Clear();
-            maxLine = addLine;
-            addLine = 0;
+
+            if (currentGroup != GROUP_CONSOLE)
+            {
+                logsb.Clear();
+                maxLine = addLine;
+                addLine = 0;
+            }
+            else
+            {
+                if (pos <= 0.1f)
+                {
+                    ViewRect.verticalNormalizedPosition = 0;
+                }
+            }
         }
     }
 
@@ -255,9 +265,8 @@ public partial class DebugDisp : MonoBehaviour, IPointerClickHandler
         lastTag      = null;
         cursorLine   = -1;
 
-        refreshConsole();
+        refreshSearchFilter(null);
         refreshLock();
-
     }
 
     /// <summary>
@@ -339,7 +348,7 @@ public partial class DebugDisp : MonoBehaviour, IPointerClickHandler
     /// <param name="_group">グループ直接指定. 指定しなければ ChangeLogGroup() に従う</param>
     public void _Log(string message, string tag = null, string _group = GROUP_OFF)
     {
-        if (logsb == null)
+        if (logsb == null || logconsole == null)
         {
             return;
         }
@@ -347,7 +356,7 @@ public partial class DebugDisp : MonoBehaviour, IPointerClickHandler
         {
             return;
         }
-        if (this.gameObject == null)
+        if (this == null)
         {
             return;
         }
@@ -368,7 +377,7 @@ public partial class DebugDisp : MonoBehaviour, IPointerClickHandler
                 return;
             }
         }
-        if (currentGroup != _group)
+        if (_group != GROUP_CONSOLE && currentGroup != _group)
         {
             // 別グループのログなので登録せず
             return;
@@ -405,10 +414,25 @@ public partial class DebugDisp : MonoBehaviour, IPointerClickHandler
             message = $" {message}";
         }
 
-        logsb.Append($"<link=\"{addLine}:{tag}\">");
-        logsb.Append(message);
-        logsb.AppendLine("</link>");
+        if (_group == GROUP_CONSOLE)
+        {
+            logconsole.Append($"<link=\"{addLine}:{tag}\">");
+            logconsole.Append(message);
+            logconsole.AppendLine("</link>");
+
+            if (logconsole.Length > 8000)
+            {
+                logconsole.Remove(0, logconsole.Length - 8000);
+            }
+        }
+        else
+        {
+            logsb.Append($"<link=\"{addLine}:{tag}\">");
+            logsb.Append(message);
+            logsb.AppendLine("</link>");
+        }
         addLine++;
+        isRequiredUpdate = true;
     }
 
     /// <summary>
@@ -451,64 +475,6 @@ public partial class DebugDisp : MonoBehaviour, IPointerClickHandler
     public string GetSearchText()
     {
         return Search.text;
-    }
-
-    /// <summary>
-    /// Debug.Log のレシーバー
-    /// </summary>
-    void logMessageReceived(string condition, string stackTrace, LogType type)
-    {
-        string datetime = System.DateTime.Now.ToLongTimeString();
-
-        string color;
-        if (type == LogType.Log)
-        {
-            color = "white";
-        }
-        else
-        if (type == LogType.Warning)
-        {
-            color = "orange";
-        }
-        else
-        {
-            color = "#ee4444";
-        }
-
-        string tr = "";
-        var sts = Regex.Matches(stackTrace, "at [^)]+");
-        foreach (var st in sts)
-        {
-            string s = st.ToString();
-            if (tr.Length > 0 && s.IndexOf("at Library") >= 0)
-            {
-                continue;
-            }
-            tr += "    " + s + "\n";
-        }
-        if (string.IsNullOrEmpty(tr) == true)
-        {
-            return;
-        }
-        tr = tr.Remove(tr.Length-1, 1);
-
-        string trace = $"<color={color}><size=80%>" + tr + $"</size></color>";
-        string text  = $"<color={color}>[{datetime}] {condition}</color>";
-
-        var stack = new ConsoleLog() { Trace = trace, Text = text };
-        consoles.Add(stack);
-        if (consoles.Count > CONSOLES_MAX)
-        {
-            consoles.RemoveAt(0);
-        }
-
-        if (currentGroup == GROUP_CONSOLE)
-        {
-            _Log(text, null, GROUP_CONSOLE);
-            _Log(trace, null, GROUP_CONSOLE);
-
-            refreshTextAndScrollBottom();
-        }
     }
 
     /// <summary>
@@ -627,7 +593,16 @@ public partial class DebugDisp : MonoBehaviour, IPointerClickHandler
     /// </summary>
     void refreshText()
     {
-        string text = logsb.ToString();
+        string text;
+        
+        if (currentGroup == GROUP_CONSOLE)
+        {
+            text = logconsole.ToString();
+        }
+        else
+        {
+            text = logsb.ToString();
+        }
 
         if (Text.text == text)
         {
@@ -641,51 +616,16 @@ public partial class DebugDisp : MonoBehaviour, IPointerClickHandler
     }
 
     /// <summary>
-    /// スクロール位置が下の方であれば自動的に最下段に
-    /// </summary>
-    void refreshTextAndScrollBottom()
-    {
-        float pos = ViewRect.verticalNormalizedPosition;
-        refreshText();
-        if (pos <= 0.1f)
-        {
-            ViewRect.verticalNormalizedPosition = 0;
-        }
-    }
-
-    /// <summary>
     /// 検索フィルタ更新
     /// </summary>
     void refreshSearchFilter(string filter)
     {
         searchFilter = filter;
-        refreshConsole();
+
+        refreshText();
+        ViewRect.verticalNormalizedPosition = 0;
     }
     
-    /// <summary>
-    /// コンソールログ更新
-    /// </summary>
-    void refreshConsole()
-    {
-        if (currentGroup == GROUP_CONSOLE)
-        {
-            logsb.Clear();
-            addLine = 0;
-
-            foreach (var stack in consoles)
-            {
-                if (string.IsNullOrEmpty(searchFilter) == true || stack.Text.IndexOf(searchFilter) >= 0)
-                {
-                    _Log(stack.Text, null, GROUP_CONSOLE);
-                    _Log(stack.Trace, null, GROUP_CONSOLE);
-                }
-            }
-
-            refreshText();
-            ViewRect.verticalNormalizedPosition = 0;
-        }
-    }
-
     /// <summary>
     /// リンクタグ取得 行数:タグ を配列にして返す
     /// </summary>
@@ -697,4 +637,37 @@ public partial class DebugDisp : MonoBehaviour, IPointerClickHandler
         }
         return tagstr.Split(':');
     }
+
+    /// <summary>
+    /// Debug.Log のレシーバー
+    /// </summary>
+    void logMessageReceived(string condition, string stackTrace, LogType type)
+    {
+        string datetime = System.DateTime.Now.ToLongTimeString();
+
+        string color;
+        if (type == LogType.Log)
+        {
+            color = "white";
+        }
+        else
+        if (type == LogType.Warning)
+        {
+            color = "orange";
+        }
+        else
+        {
+            color = "#ee4444";
+        }
+
+        string trace = null;
+        string text  = $"<color={color}>[{datetime}] {condition}</color>";
+
+        _Log(text, null, GROUP_CONSOLE);
+        if (trace != null)
+        {
+            _Log(trace, null, GROUP_CONSOLE);
+        }
+    }
+
 }
